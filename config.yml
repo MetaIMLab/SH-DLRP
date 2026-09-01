@@ -1,0 +1,116 @@
+trainer:
+  num_epochs: 100
+  warmup: 5
+  train_ratio: 0.8
+  lr: 0.01
+  min_lr: 0.0000001
+  optimizer: adamw
+  weight_decay: 0.05
+  weight_decay_end: 0.04
+  pred_ratio_var: 0
+  resume: True
+  dataset_choose: MBC
+  split: mxkf    #mc: multi-center, kf: k-fold, mx: mix, mxkf: mix k-fold
+
+
+dataset:
+  MBC:
+    mix:
+      radiology_root: ./dataset/BreCLS/
+      histology_root: ./dataset/BreCLS/wsi/vit
+      ratio: 0.8
+    kfold:
+      train_val_radiology_root: ./dataset/BreCLS-CC/
+      test_radiology_root: ./dataset/BreCLS-SH/
+      train_val_histology_root: ./dataset/sysucc-feature/vit
+      test_histology_root: ./dataset/sysush-feature/vit
+    multi_center:
+      train_radiology_root: ./dataset/BreCLS-CC/
+      test_radiology_root: ./dataset/BreCLS-SH/
+      train_histology_root: ./dataset/sysucc-feature/vit
+      test_histology_root: ./dataset/sysush-feature/vit
+
+
+    padding_size: 8000
+    batch_size: 16
+    num_workers: 0
+    image_size: 224
+
+  BreCLS:
+    data_root: ./BreCLS/
+    batch_size: 16
+    num_workers: 4
+    image_size: 224
+    train_ratio: 0.8
+#    modal_mask: [TC,VC]
+    modal_mask: []
+
+finetune:
+  checkpoint: SH-DLRP
+  model_choose: sh_dlrp
+  extractor_choose: vit
+
+models:
+#  cnn:
+#    feature_dim: 128
+#
+#  densenet:
+#    use_pretrain: True
+#    model_dir: ./pretrain_weights/densenet121-a639ec97.pth
+#
+#  vit:
+#    use_pretrain: True
+#    model_dir: ./pretrain_weights/jx_vit_base_patch16_224_in21k-e5005f0a.pth
+
+  sh_dlrp:
+    return_wsi_heatmap: False
+    modal: us
+
+
+    
+
+
+    feature_dim: 1000
+    top_k : 200
+
+extractors:
+  vim:
+    patch_size: 16
+    embed_dim: 192
+    depth: 24
+    rms_norm: True
+    residual_in_fp32:
+    True, fused_add_norm: True
+    final_pool_type: 'mean'
+    if_abs_pos_embed: True
+    if_rope: False
+    if_rope_residual: False
+    bimamba_type: "v2"
+    if_cls_token: True
+    if_divide_out: True
+    use_middle_cls_token: True
+    intermediate_feature: True
+    use_pretrain: True
+    pretrain_dir: "./pretrain_weights/vim_t_midclstok_76p1acc.pth"
+
+  vit:
+    img_size: 224
+    patch_size: 16
+    embed_dim: 768
+    depth: 12
+    num_heads: 12
+    representation_size: 768
+    num_classes: 16
+    intermediate_feature: True
+    use_pretrain: True
+    pretrain_dir: "./pretrain_weights/jx_vit_base_patch16_224_in21k-e5005f0a.pth"
+
+  resnet:
+    blocks_num: [1, 1, 1, 1]
+    num_classes: 16
+    include_top: True
+    use_pretrain: False
+    pretrain_dir: "./pretrain_weights/jx_vit_base_patch16_224_in21k-e5005f0a.pth"
+
+
+

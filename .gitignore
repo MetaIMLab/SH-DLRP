@@ -1,0 +1,36 @@
+# Local datasets and medical-imaging files
+dataset/
+datasets/
+data/
+*.svs
+*.tif
+*.tiff
+*.nii
+*.nii.gz
+*.IMA
+*.h5
+*.npy
+
+# Training outputs and checkpoints
+logs/
+model_store/
+pretrain_weights/
+*.pth
+*.pth.tar
+*.pt
+*.ckpt
+
+# Local caches and generated files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+*.log
+process_list_autogen.csv
+
+# Temporary analysis images
+utils/tmp.*
+utils/mm.png
+
+# Manuscript source files
+*.docx
